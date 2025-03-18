@@ -1,0 +1,141 @@
+<template>
+    <div class="slds-page-header">
+        <div class="slds-page-header__row">
+            <div class="slds-page-header__col-title">
+                <div class="slds-media">
+                    <div class="slds-media__figure">
+                        <span>
+                            <lightning-icon icon-name="standard:work_capacity_limit"></lightning-icon>
+
+                            <span class="slds-assistive-text">ScoreCard Projects</span>
+                        </span>
+                    </div>
+                    <div class="slds-media__body">
+                        <div class="slds-page-header__name">
+                            <div class="slds-page-header__name-title">
+                                <h1>
+                                    <span class="slds-page-header__title slds-truncate">Score Cards</span>
+                                </h1>
+                            </div>
+                        </div>
+                        <p class="slds-page-header__name-meta">Set Monthly Target for KeyParameters.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <lightning-card>
+
+<lightning-layout>
+        
+           <lightning-combobox label="Business" value={recordtype} title="Business" required="true"
+                        class="slds-p-around_medium" options={Bvalue} onchange={handlebusinessChange}>
+                    </lightning-combobox>
+            <lightning-combobox label="Sales Area" value={sales} class="slds-p-around_medium" required="true"
+                        options={salesarea} onchange={handlesalesareaChange}>
+                    </lightning-combobox>
+            
+            <lightning-combobox label="Year" value={year} class="slds-p-around_medium" required="true"
+                        options={YearValues} onchange={handleyearChange}>
+                    </lightning-combobox>
+             <lightning-combobox label="Month" value={month} class="slds-p-around_medium" required="true"
+                        options={MonthValues} onchange={handleMonthChange}>
+                    </lightning-combobox>
+        <div style="padding-top:40px;">          
+             <lightning-button label="Submit" variant="brand" class="slds-p-around_medium"
+                            onclick={submit}></lightning-button>
+                        </div>
+
+            </lightning-layout>
+            <div class="slds-text-color_destructive" style="margin-left: 3%">
+                <b>{error}</b>
+            </div>
+            <template if:true={loaded}>
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </template>
+            <template if:true={isdata}>
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            
+                            <th>KeyParameter Name</th>
+                            <th>Target</th>
+                            <th>Minimum Qualifier</th>
+                            <th>Weightage</th>
+                            <th>Actuals</th>
+                            <th>Acheivement</th>
+                            <th>Score</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template for:each={data} for:item="group" for:index="index">
+                            <tr key={group.id}>
+                                <th>{group.Index}</th>
+                                
+                                <th>
+                                    <b>{group.Pid}</b>
+                                    <br/>
+                                    <div>{group.Param_Name__c}</div></th>
+                                <th>
+                                <template if:true={readonly}>
+                                         {group.Target__c} 
+                                     </template>
+                                    <template if:false={readonly}>
+                                        <lightning-input data-id={index} type="number" value={group.Target__c} 
+                                                onchange={handletargetChange} variant="label-hidden"></lightning-input>
+                                            </template>
+                                </th>
+                                <th>
+                                    <template if:true={readonly}>
+                                    {group.Minimum_Qualifier__c}
+                                    </template>
+                                    <template if:false={readonly}>
+                                        <lightning-input data-id={index} type="number" value={group.Minimum_Qualifier__c}
+                                            onchange={handlequalifierChange} variant="label-hidden"></lightning-input>
+                                        </template>
+                                </th>
+                                <th>
+                                    <template if:true={readonly}>
+                                        {group.Weightage__c}
+                                    </template>
+                                    <template if:false={readonly}>
+                                        <lightning-input data-id={index} type="number" value={group.Weightage__c}
+                                            onchange={handleweightageChange} step="0.1" variant="label-hidden"></lightning-input>
+                                        </template>
+                                    </th>
+                                <th>
+                                    <template if:true={readonly}>
+                                        {group.Actuals__c}
+                                    </template>
+                                    <template if:false={readonly}>
+                                        <lightning-input data-id={index} type="number" value={group.Actuals__c}
+                                            onchange={handleactuvalsChange} variant="label-hidden"></lightning-input>
+                                        </template>
+                                    </th>
+                                <th>{group.Acheivement__c}</th>
+                                <th>
+                                    <template if:true={readonly}>
+                                        {group.Score__c}
+                                </template>
+                                <template if:false={readonly}>
+                                    <lightning-input data-id={index} type="number" value={group.Score__c}
+                                    onchange={handleactuvalsChange} variant="label-hidden"></lightning-input>
+                                </template>
+                                </th>
+                            </tr>
+
+                        </template>
+                    </tbody>
+                </table>
+
+                <template if:false={readonly}>
+                <div class="slds-align_absolute-center">
+            <lightning-button label="Save" variant="brand" class="slds-var-m-around_large"
+                        onclick={save}></lightning-button>
+                </div></template>
+            </template>
+        
+    </lightning-card>
+</template>
